@@ -25,4 +25,9 @@ class User extends Model
         'password',
         'remember_token',
     ];
+
+    public function address()
+    {
+        return $this->hasOne(Address::class);
+    }
 }

@@ -14,6 +14,7 @@ class Store extends FormRequest
             'identification_number' => 'required|string|unique:users,identification_number|max:255',
             'password' => 'required|string|min:8|max:255',
             'birthday' => 'required|date',
+            'cep' => 'required|string',
         ];
     }
 }

@@ -13,6 +13,7 @@ class Update extends FormRequest
             'email' => 'nullable|string|email|unique:users,email|max:255',
             'identification_number' => 'nullable|string|unique:users,identification_number|max:255',
             'birthday' => 'nullable|date',
+            'cep' => 'nullable|string',
         ];
     }
 }
