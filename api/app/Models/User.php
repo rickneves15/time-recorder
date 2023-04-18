@@ -19,6 +19,8 @@ class User extends Authenticatable
         'identification_number',
         'password',
         'birthday',
+        'role_id',
+        'manager_id',
     ];
 
     protected $hidden = [
@@ -34,5 +36,10 @@ class User extends Authenticatable
     public function recordPoints()
     {
         return $this->hasMany(RecordPoint::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Roles::class);
     }
 }

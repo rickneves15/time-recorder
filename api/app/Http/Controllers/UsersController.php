@@ -36,9 +36,11 @@ class UsersController extends Controller
     public function store(Store $request)
     {
         try {
+            $user = Auth::user();
+
             $validation = $request->validated();
 
-            $user = $this->usersService->create($request->all());
+            $user = $this->usersService->create($user->id, $request->all());
             return $this->responseSuccess($user, 'New User Created Successfully !', Response::HTTP_CREATED);
         } catch (\Exception $e) {
             return $this->responseError(null, $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -62,9 +64,11 @@ class UsersController extends Controller
     public function update(Update $request, int $id)
     {
         try {
+            $user = Auth::user();
+
             $validation = $request->validated();
 
-            $user = $this->usersService->update($id, $request->all());
+            $user = $this->usersService->update($id, $request->all(), $user->id);
             if (is_null($user)) {
                 return $this->responseError(null, 'User Not Found', Response::HTTP_NOT_FOUND);
             }
