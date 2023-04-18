@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\Users\ChangePassword;
 use App\Http\Requests\Users\Store;
 use App\Http\Requests\Users\Update;
 use App\Models\User;
@@ -11,6 +12,8 @@ use App\Services\UsersService;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -81,6 +84,30 @@ class UsersController extends Controller
             }
 
             return $this->responseSuccess($user, 'User Deleted Successfully !', Response::HTTP_NO_CONTENT);
+        } catch (\Exception $e) {
+            return $this->responseError(null, $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function changePassword(ChangePassword $request)
+    {
+        try {
+            $validation = $request->validated();
+
+            $user = Auth::user();
+
+            if (is_null($user)) {
+                return $this->responseError(null, 'UNAUTHORIZED', Response::HTTP_UNAUTHORIZED);
+            }
+
+            if (!Hash::check($request->input('current_password'), $user->password)) {
+                return $this->responseError(null, 'The provided password does not match your current password', Response::HTTP_NOT_FOUND);
+            }
+
+            $user->password = Hash::make($request->input('password'));
+            $user->save();
+
+            return $this->responseSuccess($user, 'Your password has been changed successfully !', Response::HTTP_NO_CONTENT);
         } catch (\Exception $e) {
             return $this->responseError(null, $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }

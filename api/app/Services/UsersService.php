@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UsersService
 {
@@ -28,12 +29,16 @@ class UsersService
 
     public function create(array $data)
     {
-        $address = $data['address'];
+        $address = $data['address'] ?? [];
         unset($data['address']);
 
-        $user = User::create($data);
+        $data['password'] = Hash::make($data['password']);
 
-        $user->address()->create($address);
+        $user = User::create($data);
+        if ($address) {
+
+            $user->address()->create($address);
+        }
 
         return $this->fetchOne($user['id']);
     }
@@ -45,6 +50,8 @@ class UsersService
         if (!$user) {
             $user = $this->create($data);
         }
+
+        $user['password'] = Hash::make($data['password']);
 
         $user->update($data);
 
