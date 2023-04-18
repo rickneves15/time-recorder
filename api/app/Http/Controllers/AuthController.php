@@ -30,14 +30,6 @@ class AuthController extends Controller
                 return $this->responseError(null, 'Invalid email or password', Response::HTTP_UNAUTHORIZED);
             }
 
-            // $user = $request->user();
-
-            // $token = $user->createToken('auth-token')->plainTextToken;
-
-            // $data = [
-            //     'access_token' => $token,
-            //     'token_type' => 'Bearer',
-            // ];
             $token = auth()->attempt($credentials);
             $data = [
                 'access_token' => $token,
