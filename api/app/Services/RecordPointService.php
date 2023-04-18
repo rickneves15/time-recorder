@@ -4,15 +4,40 @@ namespace App\Services;
 
 use App\Models\RecordPoint;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class RecordPointService
 {
     public function __construct(private AddressService $addressService)
     {
     }
-    public function fetchAll($userId)
+    public function fetchAll($managerId, $startDate, $endDate)
     {
-        $recordPoints = RecordPoint::where('user_id', $userId)->get();
+        $startDate = Carbon::create($startDate);
+        $endDate = Carbon::create($endDate);
+
+        $startOfDate = $startDate->startOfDay()->toDateTimeString();
+        $endOfDate = $endDate->endOfDay()->toDateTimeString();
+
+        $recordPoints = DB::select("
+                SELECT
+                    u.id,
+                    u.name,
+                    r.name as role,
+                    m.name as manager,
+                    extract(year FROM age(u.birthday)) AS age,
+                    to_char(rp.date_time, 'YYYY-MM-DD HH24:MI:SS') AS register_point_date_time
+                FROM 
+                    users u
+                    LEFT JOIN users m ON m.id = u.manager_id
+                    INNER JOIN roles r ON r.id = u.role_id
+                    INNER JOIN record_points rp ON rp.user_id = u.id
+                WHERE
+                    m.id = ?
+                    AND rp.date_time BETWEEN ? AND ?
+                ORDER BY 
+                    u.id, rp.date_time", [$managerId, $startOfDate, $endOfDate]);
+
         return $recordPoints;
     }
 

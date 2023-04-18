@@ -19,10 +19,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('users/{id}', [UsersController::class, 'destroy']);
 
         Route::get('get-address/{cep}', [AddressController::class, 'getAddress']);
+
+        Route::get('record-points', [RecordPointController::class, 'index']);
     });
 
     Route::middleware(['employee'])->group(function () {
-        Route::get('record-points', [RecordPointController::class, 'index']);
         Route::get('record-points/{id}', [RecordPointController::class, 'show']);
         Route::post('record-points', [RecordPointController::class, 'store']);
 
