@@ -30,4 +30,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Address::class);
     }
+
+    public function recordPoints()
+    {
+        return $this->hasMany(RecordPoint::class);
+    }
 }
