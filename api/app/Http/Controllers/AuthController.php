@@ -15,6 +15,11 @@ class AuthController extends Controller
 {
     use ResponseTrait;
 
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login']]);
+    }
+
     public function login(Login $request)
     {
         try {
@@ -25,13 +30,20 @@ class AuthController extends Controller
                 return $this->responseError(null, 'Invalid email or password', Response::HTTP_UNAUTHORIZED);
             }
 
-            $user = $request->user();
+            // $user = $request->user();
 
-            $token = $user->createToken('auth-token')->plainTextToken;
+            // $token = $user->createToken('auth-token')->plainTextToken;
 
+            // $data = [
+            //     'access_token' => $token,
+            //     'token_type' => 'Bearer',
+            // ];
+            $token = auth()->attempt($credentials);
             $data = [
                 'access_token' => $token,
-                'token_type' => 'Bearer',
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60,
+                'user' => auth()->user()
             ];
 
             return $this->responseSuccess($data, 'Login successfully !');
@@ -49,5 +61,10 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return $this->responseError(null, $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function userProfile()
+    {
+        return response()->json(auth()->user());
     }
 }
