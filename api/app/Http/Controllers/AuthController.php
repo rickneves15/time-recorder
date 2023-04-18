@@ -55,8 +55,12 @@ class AuthController extends Controller
         }
     }
 
-    public function userProfile()
+    public function profile()
     {
-        return response()->json(auth()->user());
+        try {
+            return $this->responseSuccess(auth()->user(), 'User Information successfully !');
+        } catch (\Exception $e) {
+            return $this->responseError(null, $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
