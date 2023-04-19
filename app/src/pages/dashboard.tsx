@@ -1,39 +1,14 @@
+import { DashboardLayout } from "@/components/DashboardLayout";
 import { AuthContext } from "@/contexts/AuthContext";
-import { getAPIClient } from "@/services/axios";
-import { GetServerSideProps } from "next";
-import { parseCookies } from "nookies";
 import { useContext } from "react";
 
 export default function Dashboard() {
-  const { signOut } = useContext(AuthContext);
-
-  async function handleSignOut(data: any) {
-    await signOut();
-  }
+  const { user } = useContext(AuthContext);
   return (
-    <>
-      <h1>Dashboard</h1>
-      <button onClick={handleSignOut}>logout</button>
-    </>
+    <DashboardLayout title="Dashboard | Home">
+      <h1 className=" text-3xl font-extrabold text-gray-900">
+        Bem Vindo {user?.name}
+      </h1>
+    </DashboardLayout>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const apiClient = getAPIClient(ctx);
-  const { ["nextauth.token"]: token } = parseCookies(ctx);
-
-  if (!token) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  await apiClient.get("/users");
-
-  return {
-    props: {},
-  };
-};

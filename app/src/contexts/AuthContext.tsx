@@ -7,14 +7,20 @@ import Router from "next/router";
 import {
   signInRequest,
   signOutRequest,
-  recoverUserInformation,
+  profileRequest,
 } from "../services/auth";
 import { api } from "../services/api";
 
 type User = {
+  id: number;
   name: string;
   email: string;
-  avatar_url: string;
+  identification_number: string;
+  birthday: string;
+  created_at: string;
+  updated_at: string;
+  role_id: number;
+  manager_id: null | number;
 };
 
 type SignInData = {
@@ -44,10 +50,12 @@ export function AuthProvider({ children }: AuthProviderType) {
     const { "nextauth.token": token } = parseCookies();
 
     if (token) {
-      recoverUserInformation().then((response: any) => {
+      profileRequest().then((response: any) => {
         setUser(response.user);
       });
     }
+
+    Router.push("/");
   }, []);
 
   async function signIn({ email, password }: SignInData) {
