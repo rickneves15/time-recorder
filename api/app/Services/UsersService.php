@@ -13,13 +13,13 @@ class UsersService
     }
     public function fetchAll()
     {
-        $users = User::with(['address', 'role'])->get();
+        $users = User::with(['address', 'role', 'manager'])->orderBY('id')->get();
         return $users;
     }
 
     public function fetchOne(int $id)
     {
-        $user = User::with(['address', 'role'])->find($id);
+        $user = User::with(['address', 'role', 'manager'])->find($id);
 
         if (!$user) {
             return null;
@@ -51,8 +51,6 @@ class UsersService
         if (!$user) {
             $user = $this->create($adminUserId, $data);
         }
-
-        $user['password'] = Hash::make($data['password']);
 
         $user->update($data);
 

@@ -28,6 +28,10 @@ class User extends Authenticatable implements JWTSubject
         'remember_token',
     ];
 
+    protected $casts = [
+        'birthday' => 'date:d/m/Y',
+    ];
+
     public function address()
     {
         return $this->hasOne(Address::class);
@@ -36,6 +40,11 @@ class User extends Authenticatable implements JWTSubject
     public function recordPoints()
     {
         return $this->hasMany(RecordPoint::class);
+    }
+
+    public function manager()
+    {
+        return $this->hasOne(User::class, "id", "manager_id");
     }
 
     public function role()

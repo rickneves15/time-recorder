@@ -27,10 +27,19 @@ class UserSeeder extends Seeder
 
         User::factory()->create([
             'role_id' => $adminRole->id
-        ])->each(function ($user) {
+        ])->each(function ($user) use ($employeeRole) {
             Address::factory()->create([
                 'user_id' => $user->id
             ]);
+            User::factory()->create([
+                'email' => "ricknevesbc2@hotmail.com",
+                'role_id' => $employeeRole->id,
+                'manager_id' => $user->id
+            ])->each(function ($user2) {
+                Address::factory()->create([
+                    'user_id' => $user2->id
+                ]);
+            });
         });
     }
 }
