@@ -6,6 +6,7 @@ use App\Http\Requests\RecordPoints\Filters;
 use App\Http\Requests\RecordPoints\Store;
 use App\Services\RecordPointService;
 use App\Traits\ResponseTrait;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,11 +31,10 @@ class RecordPointController extends Controller
         }
     }
 
-    public function store(Store $request)
+    public function store(Request $request)
     {
         try {
             $user = Auth::user();
-            $validation = $request->validated();
 
             $recordPoint = $this->recordPointService->create($user->id, $request->all());
             return $this->responseSuccess($recordPoint, 'Record Point Created Successfully !', Response::HTTP_CREATED);

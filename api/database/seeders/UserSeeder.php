@@ -18,11 +18,11 @@ class UserSeeder extends Seeder
     public function run()
     {
         $adminRole = new Roles();
-        $adminRole->name = 'admin';
+        $adminRole->name = 'Administrador';
         $adminRole->save();
 
         $employeeRole = new Roles();
-        $employeeRole->name = 'employee';
+        $employeeRole->name = 'Funcionário';
         $employeeRole->save();
 
         User::factory()->create([

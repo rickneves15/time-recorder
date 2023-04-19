@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('user_id')->nullable()->after('id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->enum('type', ['checkout', 'checkin']);
             $table->timestamp('date_time');
             $table->timestamps();
         });

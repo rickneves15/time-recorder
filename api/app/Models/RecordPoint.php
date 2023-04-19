@@ -11,7 +11,6 @@ class RecordPoint extends Model
 
     protected $fillable = [
         'user_id',
-        'type',
         'date_time'
     ];
 

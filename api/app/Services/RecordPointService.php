@@ -26,7 +26,7 @@ class RecordPointService
                     r.name as role,
                     m.name as manager,
                     extract(year FROM age(u.birthday)) AS age,
-                    to_char(rp.date_time, 'YYYY-MM-DD HH24:MI:SS') AS register_point_date_time
+                    to_char(rp.date_time, 'DD/MM/YYYY HH24:MI:SS') AS register_point_date_time
                 FROM 
                     users u
                     LEFT JOIN users m ON m.id = u.manager_id
@@ -56,7 +56,6 @@ class RecordPointService
     {
         $recordPoint = RecordPoint::create([
             'user_id' => $userId,
-            'type' => $data['type'],
             'date_time' => Carbon::now()
         ]);
 
